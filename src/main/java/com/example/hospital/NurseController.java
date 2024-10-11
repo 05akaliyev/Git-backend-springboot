@@ -5,6 +5,8 @@ import java.util.Scanner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,4 +36,19 @@ public class NurseController {
 	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false); 
 
 	    }
+	    
+	    //Endpoint find user per name
+		@GetMapping("/findName/{name}")
+		public ResponseEntity<Nurse>findByName(@PathVariable String name){
+			
+			for(Nurse nurse : nurses) {
+				if(name.equalsIgnoreCase(nurse.user())) {
+					System.out.println(nurse);
+					return ResponseEntity.ok(nurse);
+				}		
+			}
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    
+	    
+}
 }
