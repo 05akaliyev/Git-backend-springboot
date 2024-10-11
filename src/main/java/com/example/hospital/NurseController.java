@@ -51,4 +51,12 @@ public class NurseController {
 	    
 	    
 }
+	    // Endpoint getAll 
+	    @GetMapping("/index")
+	    public ResponseEntity<ArrayList<Nurse>> getAll() {
+ 
+	        // Return HTTP 200 (OK) and the ArrayList of Nurses
+	        return ResponseEntity.ok(nurses);
+
+	    }
 }
