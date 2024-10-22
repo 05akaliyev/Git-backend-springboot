@@ -16,19 +16,12 @@ public class NurseController {
 	 private ArrayList<Nurse> nurses;
 	 //ArrayList
 
-	    // Constructor to initialize the list of nurses with data
-	    public NurseController() {
-	        nurses = new ArrayList<>();
-	        nurses.add(new Nurse("Alberto", "password1"));
-	        nurses.add(new Nurse("Maria", "password2"));
-	        nurses.add(new Nurse("Juan", "password3"));
-	    }
 
 	    // Endpoint login 
 	    @PostMapping("/login")
 	    public ResponseEntity <Boolean> login(@RequestParam String user, @RequestParam String password) {
 	        for (Nurse nurse : nurses) { 
-	            if (nurse.user().equals(user) && nurse.password().equals(password)) {
+	            if (nurse.getUser().equals(user) && nurse.getPassword().equals(password)) {
 	                return ResponseEntity.ok(true); // Return HTTP 200 (OK)
 	            }
 	        }
@@ -42,7 +35,7 @@ public class NurseController {
 		public ResponseEntity<Nurse>findByName(@PathVariable String name){
 			
 			for(Nurse nurse : nurses) {
-				if(name.equalsIgnoreCase(nurse.user())) {
+				if(name.equalsIgnoreCase(nurse.getUser())) {
 					System.out.println(nurse);
 					return ResponseEntity.ok(nurse);
 				}		
