@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 @Entity
 public class Nurse {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	
 	private int id;
 	private String user;
