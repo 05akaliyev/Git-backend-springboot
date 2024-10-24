@@ -33,20 +33,16 @@ public class NurseController {
 
 	    }
 	    
-	    //Endpoint find user per name
-		@GetMapping("/findName/{name}")
-		public ResponseEntity<Nurse>findByName(@PathVariable String name){
-			
-			for(Nurse nurse : nurses) {
-				if(name.equalsIgnoreCase(nurse.getUser())) {
-					System.out.println(nurse);
-					return ResponseEntity.ok(nurse);
-				}		
-			}
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    @GetMapping("/findName/{name}")
+	    public ResponseEntity<Nurse> findByName(@PathVariable String name) {
+	        Nurse nurse = nurseRepository.findByUser(name);
+	        if (nurse != null) {
+	            return ResponseEntity.ok(nurse);
+	        }
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return HTTP 404 (Not Found)
+	    }
+
 	    
-	    
-}
 	    // Endpoint getAll 
 	    @GetMapping("/index")
 	    public ResponseEntity<Iterable<Nurse>> getAll() {
