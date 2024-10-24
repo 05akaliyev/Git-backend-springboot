@@ -20,33 +20,27 @@ public class NurseController {
 	 @Autowired
 	 private NurseRepository nurseRepository;
 
-	    // Endpoint login 
+	// Endpoint login 
 	    @PostMapping("/login")
-	    public ResponseEntity <Boolean> login(@RequestParam String user, @RequestParam String password) {
-	        for (Nurse nurse : nurses) { 
-	            if (nurse.getUser().equals(user) && nurse.getPassword().equals(password)) {
-	                return ResponseEntity.ok(true); // Return HTTP 200 (OK)
-	            }
+	    public ResponseEntity<Boolean> login(@RequestParam String user, @RequestParam String password) {
+	        Nurse nurse = nurseRepository.findByUser(user);
+	        if (nurse != null && nurse.getPassword().equals(password)) {
+	            return ResponseEntity.ok(true); // Return HTTP 200 (OK)
 	        }
-	        // Return HTTP 401 (Error)
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false); 
-
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false); // Return HTTP 401 (Unauthorized)
 	    }
+
 	    
-	    //Endpoint find user per name
-		@GetMapping("/findName/{name}")
-		public ResponseEntity<Nurse>findByName(@PathVariable String name){
-			
-			for(Nurse nurse : nurses) {
-				if(name.equalsIgnoreCase(nurse.getUser())) {
-					System.out.println(nurse);
-					return ResponseEntity.ok(nurse);
-				}		
-			}
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    @GetMapping("/findName/{name}")
+	    public ResponseEntity<Nurse> findByName(@PathVariable String name) {
+	        Nurse nurse = nurseRepository.findByUser(name);
+	        if (nurse != null) {
+	            return ResponseEntity.ok(nurse);
+	        }
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return HTTP 404 (Not Found)
+	    }
+
 	    
-	    
-}
 	    // Endpoint getAll 
 	    @GetMapping("/index")
 	    public ResponseEntity<Iterable<Nurse>> getAll() {
