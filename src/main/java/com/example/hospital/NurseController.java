@@ -2,6 +2,8 @@ package com.example.hospital;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class NurseController {
 	 private ArrayList<Nurse> nurses;
 	 //ArrayList
-
+	 @Autowired
+	 private NurseRepository nurseRepository;
 
 	    // Endpoint login 
 	    @PostMapping("/login")
@@ -46,8 +49,10 @@ public class NurseController {
 }
 	    // Endpoint getAll 
 	    @GetMapping("/index")
-	    public ResponseEntity<ArrayList<Nurse>> getAll() {
- 
+	    public ResponseEntity<Iterable<Nurse>> getAll() {
+	    	
+	        Iterable<Nurse> nurses = nurseRepository.findAll();
+
 	        // Return HTTP 200 (OK) and the ArrayList of Nurses
 	        return ResponseEntity.ok(nurses);
 
