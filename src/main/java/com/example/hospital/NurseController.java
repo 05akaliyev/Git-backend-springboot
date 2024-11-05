@@ -31,7 +31,7 @@ public class NurseController {
 	    }
 
 	    
-	    @GetMapping("/findName/{name}")
+	    @GetMapping("/nurses/{name}")
 	    public ResponseEntity<Nurse> findByName(@PathVariable String name) {
 	        Nurse nurse = nurseRepository.findByUser(name);
 	        if (nurse != null) {
