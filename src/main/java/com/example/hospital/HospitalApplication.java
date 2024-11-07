@@ -1,3 +1,4 @@
+// HospitalApplication.java
 package com.example.hospital;
 
 import org.springframework.boot.SpringApplication;
@@ -8,7 +9,5 @@ public class HospitalApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(HospitalApplication.class, args);
-	
 	}
-
 }
