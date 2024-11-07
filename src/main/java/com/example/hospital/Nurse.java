@@ -1,3 +1,4 @@
+// Nurse.java
 package com.example.hospital;
 
 import jakarta.persistence.Entity;
@@ -32,8 +33,5 @@ public class Nurse {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
-	
 }
 

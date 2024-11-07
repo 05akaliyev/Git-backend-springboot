@@ -1,6 +1,8 @@
+// NurseController.java
 package com.example.hospital;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,16 @@ public class NurseController {
 
 	        // Return HTTP 200 (OK) and the ArrayList of Nurses
 	        return ResponseEntity.ok(nurses);
-
+	    }
+	    
+	    // Endpoint FindById
+	    @GetMapping("/getNurse/{id}")
+	    public ResponseEntity<Nurse> findById(@PathVariable int id) {
+	    Optional<Nurse> nurse = nurseRepository.findById(id);
+	    if (nurse.isPresent()) {
+	        return ResponseEntity.status(HttpStatus.FOUND).body(nurse.get());
+	    } else {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	    }
 	    }
 }
