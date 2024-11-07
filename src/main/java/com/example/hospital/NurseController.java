@@ -1,6 +1,7 @@
 package com.example.hospital;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,4 +54,20 @@ public class NurseController {
 	        return ResponseEntity.ok(nurses);
 
 	    }
+	    
+	    //Endpoint Create Nurse
+	    @PostMapping("/newNurse")
+	    public ResponseEntity<Nurse> addNurse(@RequestParam String user, @RequestParam String password){
+	    	Nurse nurse = new Nurse();
+	    	nurse.setUser(user);
+	    	nurse.setPassword(password);
+	        Nurse newNurse = nurseRepository.save(nurse);
+
+	        return ResponseEntity.status(HttpStatus.CREATED).body(newNurse);
+	    	
+	    	
+	    }
+	    
+
+	    
 }
