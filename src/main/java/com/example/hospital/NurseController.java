@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -79,6 +80,26 @@ public class NurseController {
 	    	
 	    }
 	    
+	    @PostMapping("/update")
+	    public ResponseEntity<Nurse> updateNurseById(
+	        @RequestParam int id,
+	        @RequestParam(required = false) String user,
+	        @RequestParam(required = false) String password) {
 
-	    
+	        Optional<Nurse> nurseOptional = nurseRepository.findById(id);
+	        if (nurseOptional.isPresent()) {
+	            Nurse existingNurse = nurseOptional.get();
+	            if (user != null && !user.isEmpty()) {
+	                existingNurse.setUser(user);
+	            }
+	            if (password != null && !password.isEmpty()) {
+	                existingNurse.setPassword(password);
+	            }
+	            Nurse updatedNurse = nurseRepository.save(existingNurse);
+	            return ResponseEntity.ok(updatedNurse);
+	        } else {
+	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	        }
+	    }
+    
 }
