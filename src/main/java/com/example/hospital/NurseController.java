@@ -79,7 +79,7 @@ public class NurseController {
 	    	
 	    	
 	    }
-	    
+	    // Endpoint Update Nurse
 	    @PostMapping("/update")
 	    public ResponseEntity<Nurse> updateNurseById(
 	        @RequestParam int id,
@@ -97,6 +97,19 @@ public class NurseController {
 	            }
 	            Nurse updatedNurse = nurseRepository.save(existingNurse);
 	            return ResponseEntity.ok(updatedNurse);
+	        } else {
+	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	        }
+	    }
+	    
+	    // Endpoint Delete Nurse
+	    @PostMapping("/delete")
+	    public ResponseEntity<Nurse> deleteNurseById(@RequestParam int id) {
+	        Optional<Nurse> nurseOptional = nurseRepository.findById(id);
+	        if (nurseOptional.isPresent()) {
+	            Nurse deletedNurse = nurseOptional.get();
+	            nurseRepository.delete(deletedNurse);
+	            return ResponseEntity.ok(deletedNurse);
 	        } else {
 	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	        }
