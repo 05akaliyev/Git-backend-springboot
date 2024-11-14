@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,7 +38,7 @@ public class NurseController {
 	    }
 
 	    
-	    @GetMapping("/nurses/{name}")
+	    @GetMapping("/name/{name}")
 	    public ResponseEntity<Nurse> findByName(@PathVariable String name) {
 	        Nurse nurse = nurseRepository.findByUser(name);
 	        if (nurse != null) {
@@ -57,19 +59,22 @@ public class NurseController {
 	    }
 	    
 	    // Endpoint FindById
-	    @GetMapping("/getNurse/{id}")
+	    @GetMapping("/{id}")
 	    public ResponseEntity<Nurse> findById(@PathVariable int id) {
 	    Optional<Nurse> nurse = nurseRepository.findById(id);
 	    if (nurse.isPresent()) {
-	        return ResponseEntity.status(HttpStatus.FOUND).body(nurse.get());
+	    	return ResponseEntity.ok(nurse.get());  
 	    } else {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	    }
 	    }
 	    
 	    //Endpoint Create Nurse
-	    @PostMapping("/newNurse")
+	    @PostMapping("/")
 	    public ResponseEntity<Nurse> addNurse(@RequestParam String user, @RequestParam String password){
+	        if (user == null || user.isEmpty() || password == null || password.isEmpty()) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+	        }
 	    	Nurse nurse = new Nurse();
 	    	nurse.setUser(user);
 	    	nurse.setPassword(password);
@@ -80,12 +85,16 @@ public class NurseController {
 	    	
 	    }
 	    // Endpoint Update Nurse
-	    @PostMapping("/update")
+	    @PutMapping("/{id}")
 	    public ResponseEntity<Nurse> updateNurseById(
-	        @RequestParam int id,
+	    	@PathVariable int id,
 	        @RequestParam(required = false) String user,
 	        @RequestParam(required = false) String password) {
 
+	        if ((user != null && user.isEmpty()) || (password != null && password.isEmpty())) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); 
+	        }
+	  
 	        Optional<Nurse> nurseOptional = nurseRepository.findById(id);
 	        if (nurseOptional.isPresent()) {
 	            Nurse existingNurse = nurseOptional.get();
@@ -103,8 +112,8 @@ public class NurseController {
 	    }
 	    
 	    // Endpoint Delete Nurse
-	    @PostMapping("/delete")
-	    public ResponseEntity<Nurse> deleteNurseById(@RequestParam int id) {
+	    @DeleteMapping("/{id}")
+	    public ResponseEntity<Nurse> deleteNurseById(@PathVariable int id) {
 	        Optional<Nurse> nurseOptional = nurseRepository.findById(id);
 	        if (nurseOptional.isPresent()) {
 	            Nurse deletedNurse = nurseOptional.get();
