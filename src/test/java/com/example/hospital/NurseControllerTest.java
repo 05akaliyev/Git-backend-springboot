@@ -37,7 +37,7 @@ public class NurseControllerTest {
         nurse.setUser("john");
         nurse.setPassword("password123");
     }
-
+    
     @Test
     public void testLoginSuccess() throws Exception {
         // Datos de prueba

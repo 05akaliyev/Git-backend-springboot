@@ -26,7 +26,7 @@ public class NurseController {
 	 //ArrayList
 	 @Autowired
 	 private NurseRepository nurseRepository;
-
+	//Comment to test Pipeline CI
 	// Endpoint login 
 	    @PostMapping("/login")
 	    public ResponseEntity<Boolean> login(@RequestParam String user, @RequestParam String password) {
