@@ -23,165 +23,149 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(MockitoExtension.class)
 public class NurseControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @MockBean
-    private NurseRepository nurseRepository; // Mock del repositorio
+	@MockBean
+	private NurseRepository nurseRepository; // Mock del repositorio
 
-    private Nurse nurse;
+	private Nurse nurse;
 
-    @BeforeEach
-    public void setUp() {
-        nurse = new Nurse();
-        nurse.setUser("john");
-        nurse.setPassword("password123");
-    }
-    
-    @Test
-    public void testLoginSuccess() throws Exception {
-        // Datos de prueba
-        String user = "john";
-        String password = "password123";
+	@BeforeEach
+	public void setUp() {
+		nurse = new Nurse();
+		nurse.setUser("john");
+		nurse.setPassword("password123");
+	}
 
-        // Mock del repositorio
-        when(nurseRepository.findByUser(user)).thenReturn(nurse);
+	@Test
+	public void testLoginSuccess() throws Exception {
+		// Datos de prueba
+		String user = "john";
+		String password = "password123";
 
-        // Realiza la petición POST
-        mockMvc.perform(post("/nurses/login")
-                .param("user", user)
-                .param("password", password))
-                .andExpect(status().isOk()) // Código HTTP 200
-                .andExpect(content().string("true"));
-    }
+		// Mock del repositorio
+		when(nurseRepository.findByUser(user)).thenReturn(nurse);
 
-    @Test
-    public void testLoginUnauthorized() throws Exception {
-        // Datos de prueba
-        String user = "john";
-        String password = "wrongpassword";
+		// Realiza la petición POST
+		mockMvc.perform(post("/nurses/login").param("user", user).param("password", password))
+				.andExpect(status().isOk()) // Código HTTP 200
+				.andExpect(content().string("true"));
+	}
 
-        // Mock del repositorio
-        when(nurseRepository.findByUser(user)).thenReturn(nurse);
+	@Test
+	public void testLoginUnauthorized() throws Exception {
+		// Datos de prueba
+		String user = "john";
+		String password = "wrongpassword";
 
-        // Realiza la petición POST con contraseña incorrecta
-        mockMvc.perform(post("/nurses/login")
-                .param("user", user)
-                .param("password", password))
-                .andExpect(status().isUnauthorized()) // Código HTTP 401
-                .andExpect(content().string("false"));
-    }
+		// Mock del repositorio
+		when(nurseRepository.findByUser(user)).thenReturn(nurse);
 
-    @Test
-    public void testFindByNameSuccess() throws Exception {
-        // Datos de prueba
-        String name = "john";
+		// Realiza la petición POST con contraseña incorrecta
+		mockMvc.perform(post("/nurses/login").param("user", user).param("password", password))
+				.andExpect(status().isUnauthorized()) // Código HTTP 401
+				.andExpect(content().string("false"));
+	}
 
-        // Mock del repositorio
-        when(nurseRepository.findByUser(name)).thenReturn(nurse);
+	@Test
+	public void testFindByNameSuccess() throws Exception {
+		// Datos de prueba
+		String name = "john";
 
-        // Realiza la petición GET
-        mockMvc.perform(get("/nurses/name/{name}", name))
-                .andExpect(status().isOk()) // Código HTTP 200
-                .andExpect(jsonPath("$.user").value("john"))
-                .andExpect(jsonPath("$.password").value("password123"));
-    }
+		// Mock del repositorio
+		when(nurseRepository.findByUser(name)).thenReturn(nurse);
 
-    @Test
-    public void testFindByNameNotFound() throws Exception {
-        // Datos de prueba
-        String name = "john";
+		// Realiza la petición GET
+		mockMvc.perform(get("/nurses/name/{name}", name)).andExpect(status().isOk()) // Código HTTP 200
+				.andExpect(jsonPath("$.user").value("john")).andExpect(jsonPath("$.password").value("password123"));
+	}
 
-        // Mock del repositorio
-        when(nurseRepository.findByUser(name)).thenReturn(null);
+	@Test
+	public void testFindByNameNotFound() throws Exception {
+		// Datos de prueba
+		String name = "john";
 
-        // Realiza la petición GET para un usuario que no existe
-        mockMvc.perform(get("/nurses/name/{name}", name))
-                .andExpect(status().isNotFound()); // Código HTTP 404
-    }
+		// Mock del repositorio
+		when(nurseRepository.findByUser(name)).thenReturn(null);
 
-    @Test
-    public void testGetAll() throws Exception {
-        // Datos de prueba
-        Nurse nurse1 = new Nurse();
-        nurse1.setUser("john");
-        nurse1.setPassword("password123");
-        
-        Nurse nurse2 = new Nurse();
-        nurse2.setUser("jane");
-        nurse2.setPassword("password456");
+		// Realiza la petición GET para un usuario que no existe
+		mockMvc.perform(get("/nurses/name/{name}", name)).andExpect(status().isNotFound()); // Código HTTP 404
+	}
 
-        // Mock del repositorio
-        when(nurseRepository.findAll()).thenReturn(List.of(nurse1, nurse2));
+	@Test
+	public void testGetAll() throws Exception {
+		// Datos de prueba
+		Nurse nurse1 = new Nurse();
+		nurse1.setUser("john");
+		nurse1.setPassword("password123");
 
-        // Realiza la petición GET
-        mockMvc.perform(get("/nurses/index"))
-                .andExpect(status().isOk()) // Código HTTP 200
-                .andExpect(jsonPath("$[0].user").value("john"))
-                .andExpect(jsonPath("$[1].user").value("jane"));
-    }
+		Nurse nurse2 = new Nurse();
+		nurse2.setUser("jane");
+		nurse2.setPassword("password456");
 
-    @Test
-    public void testAddNurse() throws Exception {
-        // Datos de prueba
-        String user = "john";
-        String password = "password123";
-        Nurse newNurse = new Nurse();
-        newNurse.setUser(user);
-        newNurse.setPassword(password);
+		// Mock del repositorio
+		when(nurseRepository.findAll()).thenReturn(List.of(nurse1, nurse2));
 
-        // Mock del repositorio
-        when(nurseRepository.save(any(Nurse.class))).thenReturn(newNurse);
+		// Realiza la petición GET
+		mockMvc.perform(get("/nurses/index")).andExpect(status().isOk()) // Código HTTP 200
+				.andExpect(jsonPath("$[0].user").value("john")).andExpect(jsonPath("$[1].user").value("jane"));
+	}
 
-        // Realiza la petición POST
-        mockMvc.perform(post("/nurses/")
-                .param("user", user)
-                .param("password", password))
-                .andExpect(status().isCreated()) // Código HTTP 201
-                .andExpect(jsonPath("$.user").value(user))
-                .andExpect(jsonPath("$.password").value(password));
-    }
+	@Test
+	public void testAddNurse() throws Exception {
+		// Datos de prueba
+		String user = "john";
+		String password = "password123";
+		Nurse newNurse = new Nurse();
+		newNurse.setUser(user);
+		newNurse.setPassword(password);
 
-    @Test
-    public void testUpdateNurse() throws Exception {
-        // Datos de prueba
-        int id = 1;
-        String user = "john";
-        String password = "newpassword123";
-        
-        Nurse updatedNurse = new Nurse();
-        updatedNurse.setId(id);
-        updatedNurse.setUser(user);
-        updatedNurse.setPassword(password);
+		// Mock del repositorio
+		when(nurseRepository.save(any(Nurse.class))).thenReturn(newNurse);
 
-        // Mock del repositorio
-        when(nurseRepository.findById(id)).thenReturn(Optional.of(updatedNurse));
-        when(nurseRepository.save(any(Nurse.class))).thenReturn(updatedNurse);
+		// Realiza la petición POST
+		mockMvc.perform(post("/nurses/").param("user", user).param("password", password))
+				.andExpect(status().isCreated()) // Código HTTP 201
+				.andExpect(jsonPath("$.user").value(user)).andExpect(jsonPath("$.password").value(password));
+	}
 
-        // Realiza la petición PUT
-        mockMvc.perform(put("/nurses/{id}", id)
-                .param("user", user)
-                .param("password", password))
-                .andExpect(status().isOk()) // Código HTTP 200
-                .andExpect(jsonPath("$.user").value(user))
-                .andExpect(jsonPath("$.password").value(password));
-    }
+	@Test
+	public void testUpdateNurse() throws Exception {
+		// Datos de prueba
+		int id = 1;
+		String user = "john";
+		String password = "newpassword123";
 
-    @Test
-    public void testDeleteNurse() throws Exception {
-        // Datos de prueba
-        int id = 1;
-        Nurse nurseToDelete = new Nurse();
-        nurseToDelete.setId(id);
-        nurseToDelete.setUser("john");
-        nurseToDelete.setPassword("password123");
+		Nurse updatedNurse = new Nurse();
+		updatedNurse.setId(id);
+		updatedNurse.setUser(user);
+		updatedNurse.setPassword(password);
 
-        // Mock del repositorio
-        when(nurseRepository.findById(id)).thenReturn(Optional.of(nurseToDelete));
+		// Mock del repositorio
+		when(nurseRepository.findById(id)).thenReturn(Optional.of(updatedNurse));
+		when(nurseRepository.save(any(Nurse.class))).thenReturn(updatedNurse);
 
-        // Realiza la petición DELETE
-        mockMvc.perform(delete("/nurses/{id}", id))
-                .andExpect(status().isOk()) // Código HTTP 200
-                .andExpect(jsonPath("$.user").value("john"));
-    }
+		// Realiza la petición PUT
+		mockMvc.perform(put("/nurses/{id}", id).param("user", user).param("password", password))
+				.andExpect(status().isOk()) // Código HTTP 200
+				.andExpect(jsonPath("$.user").value(user)).andExpect(jsonPath("$.password").value(password));
+	}
+
+	@Test
+	public void testDeleteNurse() throws Exception {
+		// Datos de prueba
+		int id = 1;
+		Nurse nurseToDelete = new Nurse();
+		nurseToDelete.setId(id);
+		nurseToDelete.setUser("john");
+		nurseToDelete.setPassword("password123");
+
+		// Mock del repositorio
+		when(nurseRepository.findById(id)).thenReturn(Optional.of(nurseToDelete));
+
+		// Realiza la petición DELETE
+		mockMvc.perform(delete("/nurses/{id}", id)).andExpect(status().isOk()) // Código HTTP 200
+				.andExpect(jsonPath("$.user").value("john"));
+	}
 }
