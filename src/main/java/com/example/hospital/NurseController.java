@@ -113,7 +113,7 @@ public class NurseController {
 	public ResponseEntity<Nurse> deleteNurseById(@PathVariable int id) {
 		Optional<Nurse> nurseOptional = nurseRepository.findById(id);
 		if (nurseOptional.isPresent()) {
-			
+			Nurse deletedNurse = nurseOptional.get();
 			nurseRepository.delete(deletedNurse);
 			return ResponseEntity.ok(deletedNurse);
 		} else {
