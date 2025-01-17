@@ -29,12 +29,12 @@ public class NurseController {
 
 	// Endpoint login 
 	    @PostMapping("/login")
-	    public ResponseEntity<Boolean> login(@RequestParam String user, @RequestParam String password) {
+	    public ResponseEntity<Nurse> login(@RequestParam String user, @RequestParam String password) {
 	        Nurse nurse = nurseRepository.findByUser(user);
 	        if (nurse != null && nurse.getPassword().equals(password)) {
-	            return ResponseEntity.ok(true); // Return HTTP 200 (OK)
+	            return ResponseEntity.ok(nurse); // Return HTTP 200 (OK)
 	        }
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false); // Return HTTP 401 (Unauthorized)
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Return HTTP 401 (Unauthorized)
 	    }
 
 	    
