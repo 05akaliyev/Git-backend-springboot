@@ -71,13 +71,16 @@ public class NurseController {
 	    
 	    //Endpoint Create Nurse
 	    @PostMapping("/")
-	    public ResponseEntity<Nurse> addNurse(@RequestParam String user, @RequestParam String password){
+	    public ResponseEntity<Nurse> addNurse(@RequestParam String user, @RequestParam String password, @RequestParam int phone_number, @RequestParam String first_name, @RequestParam String last_name){
 	        if (user == null || user.isEmpty() || password == null || password.isEmpty()) {
 	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	        }
 	    	Nurse nurse = new Nurse();
 	    	nurse.setUser(user);
 	    	nurse.setPassword(password);
+	    	nurse.setPhone_number(phone_number);
+	    	nurse.setFirst_name(first_name);
+	    	nurse.setLast_name(last_name);
 	        Nurse newNurse = nurseRepository.save(nurse);
 
 	        return ResponseEntity.status(HttpStatus.CREATED).body(newNurse);
